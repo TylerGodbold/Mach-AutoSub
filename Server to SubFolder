@@ -1,0 +1,85 @@
+Imports System.IO
+
+Public Class Schedualer
+
+
+
+    Private Sub btnBrowser_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnBrowser.Click
+        OpenFileDialog1.InitialDirectory = "X:\"
+        OpenFileDialog1.FileName = "Select A Gcode File To Add To Memory"
+        OpenFileDialog1.Multiselect = False
+        OpenFileDialog1.Filter = "Gcode|*.NCC"
+        If OpenFileDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
+            Dim sName As String = OpenFileDialog1.SafeFileName
+            TextBox1.Text = OpenFileDialog1.FileName
+
+
+            TextBox3.Text = (GetLine(TextBox1.Text, 2))
+            TextBox3.Text = TextBox3.Text.Replace("O", "P")
+            TextBox3.Text = TextBox3.Text.Replace(" ", "")
+
+            Dim reader As IO.StreamReader = _
+    New IO.StreamReader(TextBox1.Text)
+            Try
+                Me.ListBox1.Items.Clear()
+                Do
+                    Me.ListBox1.Items.Add(reader.ReadLine)
+                Loop Until reader.Peek = -1
+
+            Catch
+                Me.ListBox1.Items.Add("File is empty")
+
+            Finally
+                reader.Close()
+            End Try
+            
+        End If
+
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        FileCopy(TextBox1.Text, TextBox2.Text)
+        If CheckBox1.Checked Then
+            Dim fileReader As String = My.Computer.FileSystem.ReadAllText(TextBox2.Text).Replace("M30", "M99")
+
+
+            File.WriteAllText(TextBox2.Text, fileReader)
+        End If
+
+
+
+        Me.Close()
+
+    End Sub
+
+    Private Function GetLine(ByVal fileName As String, ByVal line As Integer) As String
+        Using sr As New StreamReader(fileName)
+            For i As Integer = 1 To line - 1
+                sr.ReadLine()
+            Next
+            Return (sr.ReadLine())
+        End Using
+    End Function
+
+
+
+
+
+
+
+    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
+        TextBox2.Text = "C:\Mach3\Subroutines\" & TextBox3.Text
+
+    End Sub
+End Class

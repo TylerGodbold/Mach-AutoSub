@@ -1,0 +1,117 @@
+Imports System
+Imports System.IO
+Imports System.Text
+Public Class Form1
+
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.Click
+        RTB1.Text =
+            ("%" & vbCrLf & txtName.Text & vbCrLf & "M98 (" & ComboBox1.Text & ")" & vbCrLf & "M98 (" & ComboBox2.Text & ")" & vbCrLf & "M98 (" & ComboBox3.Text & ")" & vbCrLf & "M98 (" & ComboBox4.Text & ")" & vbCrLf & "M98 (" & ComboBox5.Text & ")")
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.Click
+        RTB1.Text =
+            ("%" & vbCrLf & txtName.Text & vbCrLf & "M98 (" & ComboBox1.Text & ")" & vbCrLf & "M98 (" & ComboBox2.Text & ")" & vbCrLf & "M98 (" & ComboBox3.Text & ")" & vbCrLf & "M98 (" & ComboBox4.Text & ")" & vbCrLf & "M98 (" & ComboBox5.Text & ")")
+    End Sub
+    Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.Click
+        RTB1.Text =
+            ("%" & vbCrLf & txtName.Text & vbCrLf & "M98 (" & ComboBox1.Text & ")" & vbCrLf & "M98 (" & ComboBox2.Text & ")" & vbCrLf & "M98 (" & ComboBox3.Text & ")" & vbCrLf & "M98 (" & ComboBox4.Text & ")" & vbCrLf & "M98 (" & ComboBox5.Text & ")")
+    End Sub
+    Private Sub ComboBox4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox4.Click
+        RTB1.Text =
+            ("%" & vbCrLf & txtName.Text & vbCrLf & "M98 (" & ComboBox1.Text & ")" & vbCrLf & "M98 (" & ComboBox2.Text & ")" & vbCrLf & "M98 (" & ComboBox3.Text & ")" & vbCrLf & "M98 (" & ComboBox4.Text & ")" & vbCrLf & "M98 (" & ComboBox5.Text & ")")
+    End Sub
+    Private Sub ComboBox5_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox5.Click
+        RTB1.Text =
+            ("%" & vbCrLf & txtName.Text & vbCrLf & "1) (" & ComboBox1.Text & ")" & vbCrLf & "2) (" & ComboBox2.Text & ")" & vbCrLf & "3) (" & ComboBox3.Text & ")" & vbCrLf & "4) (" & ComboBox4.Text & ")" & vbCrLf & "5) (" & ComboBox5.Text & ")")
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim folderInfo As New IO.DirectoryInfo("C:\Mach3\Subroutines")
+        Dim arrFilesInFolder() As IO.FileInfo
+        Dim fileInFolder As IO.FileInfo
+        arrFilesInFolder = folderInfo.GetFiles("*.*")
+        For Each fileInFolder In arrFilesInFolder
+            ListBox1.Items.Add(fileInFolder.Name)
+        Next
+        For Each fileInFolder In arrFilesInFolder
+            ComboBox1.Items.Add(fileInFolder.Name)
+        Next
+        For Each fileInFolder In arrFilesInFolder
+            ComboBox2.Items.Add(fileInFolder.Name)
+        Next
+        For Each fileInFolder In arrFilesInFolder
+            ComboBox3.Items.Add(fileInFolder.Name)
+        Next
+        For Each fileInFolder In arrFilesInFolder
+            ComboBox4.Items.Add(fileInFolder.Name)
+        Next
+        For Each fileInFolder In arrFilesInFolder
+            ComboBox5.Items.Add(fileInFolder.Name)
+        Next
+    End Sub
+
+    Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
+        Dim reader As IO.StreamReader = _
+New IO.StreamReader("C:\Mach3\Subroutines\" & ListBox1.Text)
+        Try
+            Me.ListBox2.Items.Clear()
+            Do
+                Me.ListBox2.Items.Add(reader.ReadLine)
+            Loop Until reader.Peek = -1
+
+        Catch
+            Me.ListBox2.Items.Add("File is empty")
+
+        Finally
+            reader.Close()
+        End Try
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim Program1 As String = ("")
+        Dim Program2 As String = ("")
+        Dim Program3 As String = ("")
+        Dim Program4 As String = ("")
+        Dim Program5 As String = ("")
+
+        If ComboBox1.Text <> "" Then
+            Program1 = ("M98(" & ComboBox1.Text & ")")
+        End If
+        If ComboBox2.Text <> "" Then
+            Program2 = ("M98(" & ComboBox2.Text & ")")
+        End If
+        If ComboBox3.Text <> "" Then
+            Program3 = ("M98(" & ComboBox3.Text & ")")
+        End If
+        If ComboBox4.Text <> "" Then
+            Program4 = ("M98(" & ComboBox4.Text & ")")
+        End If
+        If ComboBox5.Text <> "" Then
+            Program5 = ("M98(" & ComboBox5.Text & ")")
+        End If
+
+
+
+        Dim data As String() = {
+             "%",
+             "",
+             txtName.Text,
+             Program1,
+             Program2,
+             Program3,
+             Program4,
+             Program5,
+             "M30"}
+        File.WriteAllLines("C:\Mach3\Subroutines\" & txtName.Text, data)
+        Me.Close()
+    End Sub
+
+
+    Private Sub txtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
+        RTB1.Text =
+           ("%" & vbCrLf & txtName.Text & vbCrLf & "M98 (" & ComboBox1.Text & ")" & vbCrLf & "M98 (" & ComboBox2.Text & ")" & vbCrLf & "M98 (" & ComboBox3.Text & ")" & vbCrLf & "M98 (" & ComboBox4.Text & ")" & vbCrLf & "M98 (" & ComboBox5.Text & ")")
+    End Sub
+
+End Class
